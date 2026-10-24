@@ -1,0 +1,458 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>MyMatrix Challenge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@400;500&display=swap">
+<style>
+/* Layout: one centred column, the founding page's dark system, hero = the bank balance waiting for a first payment */
+:root{
+  color-scheme:dark;
+  --bg:#0f0f0f; --bg-glow:#1d1d1d; --surface:#171717; --surface-2:#1f1f1f; --chat:#141414;
+  --ink:#f0f0f0; --ink-2:#a8a8a8; --ink-3:#7c7c7c; --on-light:#0d0d0d;
+  --line:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.18);
+  --green:#3ccb72; --green-ink:#8be3ad; --green-bg:#11301d;
+  --red:#f47272; --focus:#2563eb; --stripe:#635bff;
+  --r:16px;
+  --display:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --hand:"Caveat","Bradley Hand","Segoe Print",cursive;
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--bg) radial-gradient(70% 55% at 50% 22%,var(--bg-glow) 0%,var(--bg) 70%) no-repeat;background-size:100% 1400px;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding-block:0 72px}
+.wrap{max-width:1040px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.03em;line-height:1.08;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+section{padding-block:80px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.sec{text-align:center}
+.sec h2{font-size:clamp(30px,4.2vw,44px);margin:14px auto 0;max-width:22ch}
+.u{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:8px;text-decoration-color:var(--green);text-decoration-skip-ink:none}
+
+/* nav */
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px;font-size:13px}
+.mark{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.mark img{width:24px;height:24px;border-radius:6px;border:1px solid var(--line-strong);display:block}
+.ghost{border:1px solid var(--line-strong);border-radius:999px;padding:6px 13px;color:var(--ink);text-decoration:none;font-weight:500;white-space:nowrap}
+.ghost:hover{background:rgba(255,255,255,.06)}
+
+/* hero */
+.hero{padding-block:24px 40px;text-align:center;position:relative}
+.frame{position:relative;width:min(560px,92vw);margin:0 auto}
+.stage{position:relative;width:100%}
+.buddy{display:block;width:100%;height:auto;-webkit-mask-image:linear-gradient(to bottom,#000 70%,transparent 100%);mask-image:linear-gradient(to bottom,#000 70%,transparent 100%)}
+.stage::after{content:"";position:absolute;left:-45%;right:-45%;top:48%;bottom:-18%;background:radial-gradient(ellipse 52% 55% at 50% 60%,rgba(10,10,10,.96) 0%,rgba(10,10,10,.8) 35%,rgba(10,10,10,.35) 60%,rgba(10,10,10,0) 78%);pointer-events:none;z-index:1}
+.bank{position:absolute;left:0;top:30px;width:33%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;text-align:left;box-shadow:0 20px 50px -30px rgba(0,0,0,.9);z-index:2}
+.bank .bl{font-size:11px;color:var(--ink-3);display:flex;justify-content:space-between;align-items:center;gap:6px}
+.bank .bl i{display:inline-flex;align-items:center;gap:5px;font-style:normal;color:var(--green-ink)}
+.bank .bl i::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.bank .amt{font-family:var(--display);font-size:27px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-top:4px;line-height:1.1}
+.bank .sub{font-size:11px;color:var(--ink-3);margin-top:6px;min-height:16px}
+.bank .sub b{color:var(--green-ink);font-weight:600}
+.notifs{position:absolute;right:0;top:30px;width:37%;display:flex;flex-direction:column;gap:8px;z-index:2}
+.notif{background:#262626;border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:9px 11px;display:grid;grid-template-columns:30px 1fr auto;gap:9px;align-items:center;text-align:left;box-shadow:0 18px 40px -24px rgba(0,0,0,.9);opacity:0;filter:blur(8px);overflow:hidden;transition:opacity .6s ease,filter .6s ease,height .55s ease,padding .55s ease,margin .55s ease,border-width .55s ease}
+.notif.in{opacity:1;filter:blur(0)}
+.notif.out{opacity:0;filter:blur(6px);height:0!important;padding-top:0;padding-bottom:0;margin-top:-8px;border-width:0}
+.notif .ic{width:30px;height:30px;border-radius:8px;background:var(--stripe);color:#fff;font-family:var(--display);font-weight:800;font-size:16px;display:grid;place-items:center}
+.notif .t{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.25}
+.notif .t small{display:block;font-weight:400;color:var(--ink-2);font-size:11px;margin-top:2px}
+.notif .when{font-size:10px;color:var(--ink-3);align-self:start}
+.finally{position:absolute;left:57%;top:49%;font-family:var(--hand);font-size:28px;color:rgba(255,255,255,.88);transform:rotate(-5deg);white-space:nowrap;z-index:2;pointer-events:none}
+.finally span{opacity:0;display:inline-block;transform:translateY(3px) scale(1.06);transition:opacity 1.2s ease,transform 1.2s ease}
+.finally span.on{opacity:1;transform:none}
+.hero h1{font-size:clamp(32px,5.1vw,54px);margin:calc(-0.26 * min(560px,92vw) + 1.1em) auto 0;max-width:19ch;position:relative;z-index:3}
+.hero .lede{font-family:var(--display);font-size:clamp(19px,2.4vw,24px);font-weight:600;letter-spacing:-.01em;max-width:44ch;margin:22px auto 0}
+.hero .lede .pain{color:var(--red)}
+.herocta{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;position:relative;z-index:3}
+.herofine{font-size:14px;color:var(--ink-3);max-width:40ch}
+
+/* the white pill with light running around it */
+.gowrap{position:relative;display:inline-block;isolation:isolate}
+.go{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,#ffffff 0%,#e9e9e9 100%);color:var(--on-light);border-radius:999px;height:48px;padding:0 26px;font:600 16px var(--body);text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 2px rgba(0,0,0,.6),0 8px 24px -10px rgba(255,255,255,.35);transition:transform .15s,box-shadow .15s}
+.go:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 4px rgba(0,0,0,.6),0 12px 30px -10px rgba(255,255,255,.5)}
+.go:focus-visible,.ghost:focus-visible,.mark:focus-visible,.iglink:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.flare,.flare2{position:absolute;inset:-2px;border-radius:999px;pointer-events:none;padding:2px;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;overflow:hidden;z-index:1}
+.flare::before,.flare2::before{content:"";position:absolute;inset:-150%;background:conic-gradient(from 0deg,transparent 0 72%,rgba(255,255,255,.25) 84%,rgba(255,255,255,.95) 97%,#fff 100%);animation:spin 2.2s linear infinite}
+.flare2{inset:-7px;padding:7px;opacity:.55;filter:blur(5px)}
+.flare2::before{background:conic-gradient(from 0deg,transparent 0 78%,rgba(255,255,255,.6) 96%,#fff 100%)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Lauri's line under each headline */
+.said{display:flex;align-items:flex-start;justify-content:center;gap:8px;margin:16px auto 0;font-size:17px;color:var(--ink-2);max-width:62ch;text-align:left}
+.said img{width:24px;height:24px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.15);flex:0 0 auto}
+.said b{font-size:13px;font-weight:600;color:var(--ink-3);flex:0 0 auto;margin-top:2px}
+.said span{min-width:0}
+
+/* proof */
+.proof{display:flex;flex-direction:column;gap:14px;max-width:880px;margin:34px auto 0}
+.proof figure{margin:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--line-strong);background:var(--surface);box-shadow:0 30px 80px -46px rgba(0,0,0,.95)}
+.proof img{display:block;width:100%;height:auto}
+.proof figcaption{padding:11px 16px;font-size:13.5px;color:var(--ink-2);text-align:left;border-top:1px solid var(--line)}
+
+/* the three apps */
+.apps{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:48px;align-items:center;margin-top:40px;text-align:left}
+.chat{background:var(--chat);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:16px 14px 18px;box-shadow:0 30px 70px -40px #000}
+.chat .hd{display:flex;align-items:center;gap:10px;padding:2px 4px 12px;border-bottom:1px solid var(--line)}
+.chat .av{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3a3a3a,#111);border:1px solid var(--line-strong)}
+.chat .hd b{display:block;font-size:14px}
+.chat .hd small{font-size:11.5px;color:var(--green-ink);display:inline-flex;align-items:center;gap:5px}
+.chat .hd small::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.thread{display:flex;flex-direction:column;gap:8px;padding:14px 4px 0}
+.m{max-width:86%;align-self:flex-start;background:var(--surface-2);padding:9px 12px;border-radius:14px;border-bottom-left-radius:4px;font-size:14px;line-height:1.4}
+.dots{align-self:flex-start;background:var(--surface-2);border-radius:14px;padding:11px 12px;display:flex;gap:4px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--ink-3);animation:tdot 1.25s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.16s}.dots i:nth-child(3){animation-delay:.32s}
+@keyframes tdot{0%,60%,100%{opacity:.32;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;position:relative}
+.steps::before{content:"";position:absolute;left:24px;top:24px;bottom:24px;border-left:1px dashed rgba(255,255,255,.18)}
+.steps li{position:relative;display:flex;align-items:flex-start;gap:16px}
+.steps .n{flex:0 0 auto;width:50px;height:50px;border-radius:14px;background:var(--surface);border:1px solid var(--line-strong);display:grid;place-items:center;font:800 18px var(--display);color:var(--ink-2);position:relative;z-index:1}
+.steps p{font-size:16px;color:var(--ink-2);line-height:1.5;padding-top:3px;min-width:0}
+.steps p b{display:block;font-family:var(--display);font-size:19px;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-bottom:2px}
+.steps li.pay .n{background:var(--green-bg);border-color:rgba(60,203,114,.45);color:var(--green-ink);box-shadow:0 0 22px -6px rgba(60,203,114,.7)}
+.steps li.pay p b{color:var(--green-ink)}
+
+/* rules + prize */
+.terms{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;margin-top:36px;text-align:left;align-items:stretch}
+.rules{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px 22px}
+.rules ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.rules li{display:flex;align-items:flex-start;gap:11px;color:var(--ink-2);font-size:15.5px;line-height:1.45}
+.rules li svg{flex:0 0 auto;width:18px;height:18px;margin-top:2px;fill:none;stroke:var(--ink-3);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.rules li b{color:var(--ink);font-weight:600}
+.prize{background:linear-gradient(180deg,#123220 0%,#141414 55%);border:1px solid rgba(60,203,114,.26);border-radius:20px;padding:24px 22px;display:flex;flex-direction:column;gap:6px;box-shadow:0 30px 70px -40px #000}
+.prize .tag{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green-ink)}
+.prize .amt{font-family:var(--display);font-size:clamp(48px,7vw,64px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--green-ink);font-variant-numeric:tabular-nums;margin-top:6px}
+.prize .to{font-size:15px;color:var(--ink-2)}
+.prize ul{list-style:none;margin:14px 0 0;padding:14px 0 0;border-top:1px solid rgba(139,227,173,.18);display:flex;flex-direction:column;gap:9px}
+.prize li{display:flex;gap:9px;align-items:flex-start;font-size:14.5px;color:var(--ink);line-height:1.45}
+.prize li svg{flex:0 0 auto;width:16px;height:16px;margin-top:2px;fill:none;stroke:var(--green-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.prize .paid{margin-top:auto;padding-top:16px;font-size:12.5px;color:var(--ink-3)}
+
+/* end */
+.end{padding-block:90px 20px}
+.end h2{font-size:clamp(32px,5vw,54px);max-width:18ch}
+.end .herocta{margin-top:30px}
+.iglink{color:var(--ink-2);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+.iglink:hover{color:var(--ink)}
+.foot{font-size:12.5px;color:var(--ink-3);text-align:center;padding-top:48px}
+
+@media (max-width:900px){.bank{top:2%;width:42%}.notifs{top:2%;width:46%}.bank .amt{font-size:22px}.notif{grid-template-columns:28px 1fr;padding:9px 10px}.notif .ic{width:28px;height:28px;font-size:15px;border-radius:7px}.notif .when{display:none}.finally{font-size:22px;left:56%}}
+@media (max-width:800px){section{padding-block:56px}.apps{grid-template-columns:1fr;gap:32px}.chat{max-width:340px;width:100%;margin-inline:auto}.terms{grid-template-columns:1fr}}
+@media (max-width:640px){.hero h1{font-size:clamp(32px,8.4vw,44px);max-width:100%;letter-spacing:-.035em;margin-top:calc(-0.26 * min(560px,92vw) + 1.25em)}.said{font-size:16px}}
+@media (max-width:520px){.bank{width:46%;padding:10px 12px}.bank .amt{font-size:22px}.bank .sub{display:none}.notifs{width:50%}.notif .t small{display:none}.ghost{padding:6px 11px}}
+@media (prefers-reduced-motion:reduce){.notif,.finally span{transition:none}.flare::before,.flare2::before,.dots i{animation:none}}
+
+/* Oct 23: the founding page's look. Hero = headline on two lines, the red line, Lauri typing in the chat box; Lauri lines type themselves out; dashed cue; more room between sections */
+section{padding-block:84px}
+@media (max-width:760px){section{padding-block:64px}}
+.hero{padding-block:24px 36px}
+.hero h1{margin:40px auto 0;max-width:none}
+@media (max-width:640px){.hero h1{margin-top:28px}}
+.hero h1 .hl{display:block;animation:heroRise .6s cubic-bezier(.2,.7,.2,1) both}
+.hero h1 .hl+.hl{animation-delay:.12s}
+.hero .u.draw{text-decoration:none;background:linear-gradient(var(--green),var(--green)) 0 100%/0% 3px no-repeat;animation:heroDraw .9s cubic-bezier(.6,.1,.2,1) .55s forwards}
+@keyframes heroRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes heroDraw{to{background-size:100% 3px}}
+.prompt{position:relative;max-width:640px;margin:22px auto 48px;background:#141414;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:14px 16px 12px;text-align:left;box-shadow:0 30px 80px -40px rgba(0,0,0,1);isolation:isolate}
+.prompt .glow{position:absolute;inset:0;border-radius:20px;overflow:hidden;z-index:0;pointer-events:none}
+.prompt .glow .p{position:absolute;inset:0;transform-origin:50% 100%;animation:pulse 5s ease-in-out infinite}
+.prompt.listening .glow .p{animation-duration:1.8s}
+@keyframes pulse{0%{transform:scale(1);opacity:1}40%{transform:scale(.7);opacity:.55}100%{transform:scale(1);opacity:1}}
+.prompt .glow .p::before,.prompt .glow .p::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-24%;height:128%;filter:blur(24px) saturate(.85);
+  -webkit-mask-image:radial-gradient(60% 100% at 50% 100%,#000 32%,rgba(0,0,0,.6) 60%,transparent 100%);mask-image:radial-gradient(60% 100% at 50% 100%,#000 32%,rgba(0,0,0,.6) 60%,transparent 100%);
+  transition:opacity .8s}
+.prompt .glow .p::before{opacity:.8;
+  background:
+    radial-gradient(14% 62% at 50% 100%,rgba(255,255,255,.9) 0%,rgba(255,255,255,.3) 45%,transparent 75%),
+    radial-gradient(18% 56% at 41% 100%,rgba(110,200,235,.75),transparent 70%),
+    radial-gradient(20% 50% at 31% 100%,rgba(80,200,150,.75),transparent 70%),
+    radial-gradient(18% 56% at 59% 100%,rgba(190,120,255,.75),transparent 70%),
+    radial-gradient(20% 50% at 69% 100%,rgba(255,120,150,.75),transparent 70%),
+    radial-gradient(18% 40% at 78% 100%,rgba(255,170,110,.55),transparent 70%);
+  animation:auroraA 14s ease-in-out infinite}
+.prompt .glow .p::after{opacity:0;
+  background:
+    radial-gradient(14% 62% at 50% 100%,rgba(255,255,255,.9) 0%,rgba(255,255,255,.3) 45%,transparent 75%),
+    radial-gradient(18% 56% at 41% 100%,rgba(255,120,150,.75),transparent 70%),
+    radial-gradient(20% 50% at 31% 100%,rgba(190,120,255,.75),transparent 70%),
+    radial-gradient(18% 56% at 59% 100%,rgba(80,200,150,.75),transparent 70%),
+    radial-gradient(20% 50% at 69% 100%,rgba(110,200,235,.75),transparent 70%),
+    radial-gradient(18% 40% at 22% 100%,rgba(255,170,110,.55),transparent 70%);
+  animation:auroraB 14s ease-in-out infinite}
+@keyframes auroraA{0%{opacity:.8;transform:translateX(-3%)}50%{opacity:.15;transform:translateX(3%) scaleY(1.06)}100%{opacity:.8;transform:translateX(-3%)}}
+@keyframes auroraB{0%{opacity:.15;transform:translateX(3%)}50%{opacity:.8;transform:translateX(-3%) scaleY(1.06)}100%{opacity:.15;transform:translateX(3%)}}
+.prompt.listening .glow .p::before,.prompt.listening .glow .p::after{animation-duration:3s;filter:blur(24px) saturate(1)}
+.prompt>*:not(.glow){position:relative;z-index:1}
+.prompt .bud{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink-2);padding:0 4px 6px;max-height:30px;overflow:hidden;transition:opacity .25s,max-height .25s,padding .25s}
+.prompt.typing .bud{opacity:0;max-height:0;padding-top:0;padding-bottom:0}
+.prompt .bud img{width:22px;height:22px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.15)}
+.prompt .sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:-1px;padding:0;border:0}
+
+.prow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.prompt .glow .p,.prompt .glow .p::before,.prompt .glow .p::after{animation:none}}
+.hero .hbox{margin:28px auto 0;z-index:2}
+.hero .hbox .said{display:block;margin:0;padding:2px 4px;font-size:17px;line-height:1.55;text-align:left;max-width:none}
+.hero .hbox .said span{display:block;color:var(--ink-2)}
+.hero .hbox .prow{margin-top:14px}
+.hero .hbox .hfine{font-size:13px;color:var(--ink-3);padding-left:4px}
+.hero .hbox .go{height:40px;padding:0 18px;font-size:15px}
+@media (max-width:520px){.hero .hbox .said{font-size:16px}}
+/* scroll cue: dashed line from the chat box down to the next headline */
+.cue{position:absolute;left:50%;bottom:-104px;width:2px;height:188px;transform:translateX(-50%);overflow:visible;z-index:1;pointer-events:none;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 88%);mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 88%)}
+.cue .l1{fill:none;stroke:rgba(255,255,255,.2);stroke-width:1.2;stroke-dasharray:6 10;animation:flow 6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-160}}
+/* broski lines type themselves out when the section comes into view.
+   the ghost copy holds the exact final layout (and stays selectable / readable
+   to screen readers) so nothing shifts or re-wraps while the letters land. */
+.said span.tw{position:relative;text-align:left}
+.said span.tw>i{font-style:normal}
+.said span.tw>i.tw-g{opacity:0}
+.said span.tw>i.tw-l{position:absolute;left:0;top:0;width:100%}
+/* caret now sits between typed and untyped text */
+/* an empty inline box is never a line-break point, so the caret cannot reflow the text mid-word */
+.said span.tw .tw-c{display:inline;border-left:1.5px solid currentColor;margin-left:-1.5px;animation:twcaret .75s steps(1) infinite}
+.said span.tw .tw-r{font-style:normal;color:transparent}
+.said span.tw.typing>i.tw-l.old::after{content:'';display:inline-block;width:1.5px;height:1em;background:currentColor;margin-left:2px;vertical-align:-.13em;animation:twcaret .75s steps(1) infinite}
+@keyframes twcaret{50%{opacity:0}}
+/* while Lauri is about to type: three dots where his first letter will land */
+.said span.tw .tw-c{position:relative}
+.said span.tw.waiting .tw-c{animation:none;border-left-color:transparent}
+.said span.tw .tw-dots{position:absolute;left:0;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:3px;padding:6px 8px;border-radius:999px;background:var(--surface-3)}
+.said span.tw .tw-dots i{width:5px;height:5px;border-radius:50%;background:var(--ink-2);animation:twdot 1s ease-in-out infinite}
+.said span.tw .tw-dots i:nth-child(2){animation-delay:.15s}
+.said span.tw .tw-dots i:nth-child(3){animation-delay:.3s}
+@keyframes twdot{0%,60%,100%{transform:none;opacity:.45}30%{transform:translateY(-3px);opacity:1}}
+@media (prefers-reduced-motion:reduce){.hero h1 .hl{animation:none}.hero .u.draw{animation:none;background-size:100% 3px}.cue .l1{animation:none}}
+
+/* the video block, same as the founding page; it plays the founding film until the challenge one is shot */
+.yt{position:relative;display:block;max-width:960px;margin-inline:auto;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 40px 90px -50px rgba(0,0,0,1);transition:transform .25s ease,box-shadow .25s ease;isolation:isolate}
+.yt img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.yt:hover{transform:translateY(-2px);box-shadow:0 50px 100px -50px rgba(0,0,0,1)}
+.yt:hover img{transform:scale(1.02)}
+.yt .ep{position:absolute;left:14px;top:14px;background:rgba(0,0,0,.65);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:6px}
+.yt .play{position:absolute;left:50%;top:50%;width:68px;height:48px;transform:translate(-50%,-50%);transition:transform .2s ease}
+.yt .play svg{width:100%;height:100%}
+.yt .play .bg{fill:rgba(20,20,20,.75);transition:fill .2s}
+.yt .play .tri{fill:#fff}
+.yt:hover .play .bg{fill:#ff0033}
+.yt:hover .play{transform:translate(-50%,-50%) scale(1.08)}
+.yt .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.25);opacity:0;transition:opacity .2s}
+.yt .bar i{display:block;height:100%;width:0;background:#ff0033;transition:width .8s ease}
+.yt:hover .bar{opacity:1}
+.yt:hover .bar i{width:3%}
+.yt:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+.vid-sec{padding-block:40px 24px}
+.herovid{margin:0 auto;width:min(860px,100%);aspect-ratio:16/9;max-width:100%;border-radius:var(--r);overflow:hidden;border:1px solid var(--line-strong);background:#000;box-shadow:0 30px 80px -46px rgba(0,0,0,.95)}
+.herovid video{width:100%;height:100%;display:block;object-fit:cover}
+.herovid .ytcover{position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#000;cursor:pointer}
+.herovid .ytcover:focus-visible{outline:2px solid var(--focus);outline-offset:-4px;border-radius:inherit}
+.herovid.yt .play{top:62%}
+.herovid.yt .play .bg{fill:rgba(20,20,20,.42)}
+.herovid.yt:hover .play .bg{fill:#ff0033}
+@media (max-width:520px){.herovid.yt .play{width:52px;height:37px;top:64%}}
+.vid-sec{position:relative}
+.cue.vcue{bottom:auto;top:calc(100% - 24px);height:96px}
+/* Oct 24: the lede is one benefit line; "work a 9-to-5" is red, cut through by two thin knife slashes (tapered shapes, not strokes), and never breaks */
+.hero .lede{text-wrap:balance}
+.hero .lede s{position:relative;color:var(--red);text-decoration:none}
+.hero .lede s svg{position:absolute;left:-.12em;right:-.12em;top:.14em;bottom:.08em;width:calc(100% + .24em);height:calc(100% - .22em);overflow:visible;pointer-events:none}
+.hero .lede s path{fill:#ff3030}
+.nw{white-space:nowrap}
+/* Oct 24: the founding page's huddle card, as a message instead of a call (typing dots in place of the voice wave) */
+.call-sec{padding-bottom:24px}
+.huddlewrap{display:flex;justify-content:center;margin-top:36px}
+.huddle{width:min(280px,100%);background:#1e1f22;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:14px;box-shadow:0 24px 60px -34px rgba(0,0,0,.95)}
+.hrow{display:flex;align-items:center;justify-content:center;gap:12px;text-align:left}
+.hav{position:relative;flex:0 0 auto;width:42px;height:42px}
+.hav img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:1px solid rgba(255,255,255,.14)}
+.hav i{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2.5px solid #1e1f22}
+.hmeta{display:flex;flex-direction:column;gap:1px;min-width:0;flex:0 1 auto}
+.hmeta b{font:600 14.5px var(--body);color:var(--ink)}
+.hrow .dots{align-self:center;background:#2b2d31;padding:8px 10px}
+.huddle .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;padding:13px 20px;background:#fff;color:#0d0d0d;border-radius:999px;font:600 15px var(--body);text-decoration:none}
+.huddle .cta:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+</style>
+
+<div class="wrap">
+
+<nav class="nav">
+  <a class="mark" href="#top"><img src="img/logo.webp" alt="">MyMatrix</a>
+  <a class="ghost" href="https://airtable.com/appOsRRfhAMYpDxKV/pagmAZPItKb9Lk2iy/form" target="_blank" rel="noopener">Join the waitlist</a>
+</nav>
+
+<section class="hero" id="top">
+  <h1><span class="hl">Start your own business in 7 days.</span> <span class="hl">Whoever gets furthest <span class="u draw">wins&nbsp;€1,000</span></span></h1>
+  <p class="lede">Start your dream side hustle today, so&nbsp;you never have to <s class="nw">work a 9-to-5<svg viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true"><path d="M1.00,3.50C53.85,7.43 106.43,13.94 159.00,20.50C106.32,14.93 53.65,9.32 1.00,3.50Z"/><path d="M157.50,1.50C106.03,8.53 54.52,15.32 3.00,22.00C54.40,14.42 105.82,6.95 157.50,1.50Z"/></svg></s> again</p>
+  <div class="prompt hbox">
+    <div class="glow" aria-hidden="true"><div class="p"></div></div>
+    <div class="bud"><img src="img/lauri-avatar.webp" alt=""><span>Lauri</span></div>
+    <p class="said"><span data-chain="1">i'm giving away €1,000 again. last time it went to Vincas. this time you get 7 days, and it starts the day 100 people are on the waitlist</span></p>
+    <div class="prow"><span class="hfine">Free to join</span><span class="gowrap"><span class="flare2" aria-hidden="true"></span><span class="flare" aria-hidden="true"></span><a class="go" href="https://airtable.com/appOsRRfhAMYpDxKV/pagmAZPItKb9Lk2iy/form" target="_blank" rel="noopener">Join the waitlist →</a></span></div>
+  </div>
+  <svg class="cue" viewBox="0 0 2 188" preserveAspectRatio="none" aria-hidden="true"><path class="l1" d="M1,0 V188"/></svg>
+</section>
+
+<section class="sec vid-sec" id="video" aria-label="Lauri on the challenge">
+  <figure class="herovid yt" id="herovid"><video playsinline preload="metadata" poster="video-poster.jpg"><source src="video.mp4" type="video/mp4"></video>
+    <button class="ytcover" type="button" aria-label="Play Lauri's video">
+      <img src="video-poster.jpg" alt="">
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 68 48"><path class="bg" d="M66.5 7.7c-.8-2.9-3-5.2-5.9-6C55.4 0 34 0 34 0S12.6 0 7.4 1.7c-2.9.8-5.1 3.1-5.9 6C0 13 0 24 0 24s0 11 1.5 16.3c.8 2.9 3 5.2 5.9 6C12.6 48 34 48 34 48s21.4 0 26.6-1.7c2.9-.8 5.1-3.1 5.9-6C68 35 68 24 68 24s0-11-1.5-16.3z"/><path class="tri" d="M27 34.5l17.5-10.5L27 13.5z"/></svg></span>
+      <span class="bar" aria-hidden="true"><i></i></span>
+    </button>
+  </figure>
+  <svg class="cue vcue" viewBox="0 0 2 96" preserveAspectRatio="none" aria-hidden="true"><path class="l1" d="M1,0 V96"/></svg>
+</section>
+
+<section class="sec">
+  <p class="eyebrow">The first challenge</p>
+  <h2>Vincas turned a two-year-old idea into a live startup in 72 hours</h2>
+  <p class="said"><img src="img/lauri-avatar.webp" alt=""><b>Lauri</b><span>21 people got 72 hours to start a business. Vincas won, and i sent him €1,000 of my own money</span></p>
+  <div class="proof">
+    <figure>
+      <img src="img/oinko.webp" alt="The live Oinko landing page. Take a photo, Oinko sells it for you" width="1400" height="617" loading="lazy">
+      <figcaption>Oinko, the startup Vincas put live</figcaption>
+    </figure>
+    <figure>
+      <img src="img/call.webp" alt="Video call between Vincas Mikulėnas and Lauri" width="1400" height="418" loading="lazy">
+      <figcaption>Vincas and me on a call, when I announced he's the winner</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="eyebrow">The 7 days</p>
+  <h2>Three steps between you and your first payment</h2>
+  <p class="said"><img src="img/lauri-avatar.webp" alt=""><b>Lauri</b><span>you don't need an idea to join. you'll build one from what you know</span></p>
+  <div class="apps">
+    <div class="chat" role="img" aria-label="MyMatrix texting you first. you here? got a few minutes to start?">
+      <div class="hd"><span class="av" aria-hidden="true"></span><div><b>MyMatrix</b><small>online</small></div></div>
+      <div class="thread" aria-hidden="true">
+        <div class="m">you here?</div>
+        <div class="m">got a few minutes to start?</div>
+        <div class="dots"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+    <ol class="steps">
+      <li><span class="n" aria-hidden="true">1</span><p><b>Founder Fit</b>Find out what kind of founder you are and what you're best at</p></li>
+      <li><span class="n" aria-hidden="true">2</span><p><b>Elevator MVP</b>Turn that into an idea with a name, a price and a way to get paid, and test it with real people fast</p></li>
+      <li><span class="n" aria-hidden="true">3</span><p><b>Door Knock</b>Find your first buyers through what you're already good at</p></li>
+      <li class="pay"><span class="n" aria-hidden="true">€</span><p><b>Your first payment</b>The moment your project becomes a business. Your friend's mom paying you €5 counts</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="eyebrow">The rules</p>
+  <h2>Same day, same clock, any business</h2>
+  <div class="terms">
+    <div class="rules">
+      <ul>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span><b>Everyone starts from zero</b> on the same day</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20.5V4"/><path d="M5 4.5h11l-2 3.5 2 3.5H5"/></svg><span><b>7 days, no finish line.</b> The clock ends and whoever got furthest wins</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 9.5 6 4.5h12l1.5 5"/><path d="M4.5 9.5h15v1a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0Z"/><path d="M5.5 13v6.5h13V13"/></svg><span><b>Any business counts.</b> A newsletter, a shop, a service, an app</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.6 19a5.4 5.4 0 0 1 10.8 0"/><path d="M16.5 12.2a3 3 0 1 0-2.2-5.4"/><path d="M17 19h3.4a4.6 4.6 0 0 0-3.1-4.3"/></svg><span><b>More people paying gets you further.</b> After your first payment, every new person who pays takes you further</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.6A7.5 7.5 0 1 1 20 11.5Z"/></svg><span><b>Show every payment in the chat.</b> A payment you don't show there doesn't count</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/></svg><span><b>I pick the winner</b> based on your progress in MyMatrix</span></li>
+      </ul>
+    </div>
+    <div class="prize">
+      <span class="tag">The prize</span>
+      <div class="amt">€1,000</div>
+      <p class="to">From me personally, to the winner</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>A 1:1 growth strategy audit with me</li>
+      </ul>
+      <p class="paid">Vincas got his €1,000 on 6 October</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec end">
+  <p class="eyebrow">When it starts</p>
+  <h2>It starts the day 100 people are on the waitlist</h2>
+  <p class="said"><img src="img/lauri-avatar.webp" alt=""><b>Lauri</b><span>10 years building products and marketing for big brands, and i helped build an AI agent business from $0 to $45k a month. i'm building MyMatrix so you can build yours much faster. i'll do my best so you become my next case study</span></p>
+  <div class="herocta">
+    <span class="gowrap"><span class="flare2" aria-hidden="true"></span><span class="flare" aria-hidden="true"></span><a class="go" href="https://airtable.com/appOsRRfhAMYpDxKV/pagmAZPItKb9Lk2iy/form" target="_blank" rel="noopener">Join the waitlist →</a></span>
+  </div>
+</section>
+
+<section class="sec call-sec">
+  <p class="eyebrow">One more thing</p>
+  <h2>Still got questions?<br>Let's Talk</h2>
+  <div class="huddlewrap">
+    <div class="huddle">
+      <div class="hrow">
+        <span class="hav"><img src="img/lauri-avatar.webp" alt=""><i></i></span>
+        <span class="hmeta"><b>Lauri</b></span>
+        <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+      <a class="cta" href="https://www.linkedin.com/in/lrnsvtks/" target="_blank" rel="noopener">Message me on LinkedIn →</a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* typewriter for the Broski sub-headlines */
+(function(){
+  var spans=document.querySelectorAll('.said span');
+  if(!spans.length||!('IntersectionObserver' in window))return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return; // leave them plainly written
+  var items=[];
+  Array.prototype.forEach.call(spans,function(sp){
+    var text=sp.textContent;if(!text.trim())return;
+    sp.classList.add('tw');sp.textContent='';
+    var ghost=document.createElement('i');ghost.className='tw-g';ghost.textContent=text;
+    var live=document.createElement('i');live.className='tw-l';live.setAttribute('aria-hidden','true');
+    sp.appendChild(ghost);sp.appendChild(live);
+    items.push({sp:sp,live:live,text:text,done:false});
+  });
+  if(!items.length)return;
+  // the full text sits in its final place from the start; typed letters show, the rest stay transparent,
+  // so a centered line types from its own left edge instead of growing out of the middle
+  function esc(t){return t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function paint(it,i){it.live.innerHTML=esc(it.text.slice(0,i))+(i<it.text.length?'<b class="tw-c"></b><i class="tw-r">'+esc(it.text.slice(i))+'</i>':'');}
+  function wait(it){it.sp.classList.add('waiting');it.live.innerHTML='<b class="tw-c"><i class="tw-dots"><i></i><i></i><i></i></i></b><i class="tw-r">'+esc(it.text)+'</i>';}
+  function type(it,done){
+    it.sp.classList.remove('waiting');it.sp.classList.add('typing');
+    var i=0,per=24,last=0; // ms per character
+    function tick(t){
+      if(!last)last=t;
+      var due=Math.floor((t-last)/per);
+      if(due>0){i=Math.min(it.text.length,i+due);paint(it,i);last=t;}
+      if(i<it.text.length)requestAnimationFrame(tick);
+      else{it.sp.classList.remove('typing');if(done)done();}
+    }
+    requestAnimationFrame(tick);
+  }
+  // lines marked data-chain type like chat messages: dots, the line, a beat, then the next one
+  var chained=items.filter(function(it){return it.sp.hasAttribute('data-chain');});
+  function chain(k){if(k>=chained.length)return;var it=chained[k];it.done=true;wait(it);
+    setTimeout(function(){type(it,function(){setTimeout(function(){chain(k+1);},300);});},k?700:1000);}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting)return;
+      io.unobserve(en.target);
+      if(chained.length&&en.target===chained[0].sp){chain(0);return;}
+      for(var k=0;k<items.length;k++){
+        if(items[k].sp===en.target&&!items[k].done){items[k].done=true;var d=parseInt(items[k].sp.getAttribute('data-delay'),10)||180;if(d>400)wait(items[k]);setTimeout(type.bind(null,items[k]),d);break;}
+      }
+    });
+  },{threshold:.6});
+  items.forEach(function(it){if(chained.indexOf(it)>0)return;io.observe(it.sp);});
+})();
+
+/* the video: the cover plays it */
+(function(){
+  var fig=document.getElementById('herovid');if(!fig)return;
+  var v=fig.querySelector('video'),cover=fig.querySelector('.ytcover');
+  cover.addEventListener('click',function(){
+    fig.classList.remove('yt');cover.remove();v.controls=true;
+    var p=v.play();if(p&&p.catch)p.catch(function(){});
+  });
+})();
+</script>
+
+</body></html>
